@@ -1,0 +1,125 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "defaultValue": "SouthCentralUS",
+      "type": "String",
+      "metadata": {
+        "description": "Location of the resources."
+      }
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2018-07-01-preview",
+      "name": "MeshAppz",
+      "type": "Microsoft.ServiceFabricMesh/applications",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "Microsoft.ServiceFabricMesh/networks/MeshAppzNetwork"
+      ],
+      "properties": {
+        "services": [
+          {
+            "name": "Web1",
+            "properties": {
+              "description": "Web1 description.",
+              "osType": "Windows",
+              "codePackages": [
+                {
+                  "name": "Web1",
+                  "image": "web1:dev",
+                  "endpoints": [
+                    {
+                      "name": "Web1Listener",
+                      "port": 20004
+                    }
+                  ],
+                  "environmentVariables": [
+                    {
+                      "name": "ASPNETCORE_URLS",
+                      "value": "http://+:20004"
+                    }
+                  ],
+                  "resources": {
+                    "requests": {
+                      "cpu": 0.5,
+                      "memoryInGB": 1.0
+                    }
+                  }
+                }
+              ],
+              "replicaCount": 1,
+              "networkRefs": [
+                {
+                  "name": "[resourceId('Microsoft.ServiceFabricMesh/networks', 'MeshAppzNetwork')]"
+                }
+              ]
+            }
+          },
+          {
+            "name": "Web3",
+            "properties": {
+              "description": "Web3 description.",
+              "osType": "Windows",
+              "codePackages": [
+                {
+                  "name": "Web3",
+                  "image": "web3:dev",
+                  "endpoints": [
+                    {
+                      "name": "Web3Listener",
+                      "port": 20001
+                    }
+                  ],
+                  "environmentVariables": [
+                    {
+                      "name": "ASPNETCORE_URLS",
+                      "value": "http://+:20001"
+                    }
+                  ],
+                  "resources": {
+                    "requests": {
+                      "cpu": 0.5,
+                      "memoryInGB": 1.0
+                    }
+                  }
+                }
+              ],
+              "replicaCount": 1,
+              "networkRefs": [
+                {
+                  "name": "[resourceId('Microsoft.ServiceFabricMesh/networks', 'MeshAppzNetwork')]"
+                }
+              ]
+            }
+          }
+        ],
+        "description": "MeshAppz description."
+      }
+    },
+    {
+      "apiVersion": "2018-07-01-preview",
+      "name": "MeshAppzNetwork",
+      "type": "Microsoft.ServiceFabricMesh/networks",
+      "location": "[parameters('location')]",
+      "dependsOn": [],
+      "properties": {
+        "description": "MeshAppzNetwork description.",
+        "addressPrefix": "10.0.0.4/22",
+        "ingressConfig": {
+          "layer4": [
+            {
+              "name": "Web1Ingress",
+              "publicPort": "20004",
+              "applicationName": "MeshAppz",
+              "serviceName": "Web1",
+              "endpointName": "Web1Listener"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
