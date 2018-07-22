@@ -57,43 +57,6 @@
                 }
               ]
             }
-          },
-          {
-            "name": "Web3",
-            "properties": {
-              "description": "Web3 description.",
-              "osType": "Windows",
-              "codePackages": [
-                {
-                  "name": "Web3",
-                  "image": "web3:dev",
-                  "endpoints": [
-                    {
-                      "name": "Web3Listener",
-                      "port": 20001
-                    }
-                  ],
-                  "environmentVariables": [
-                    {
-                      "name": "ASPNETCORE_URLS",
-                      "value": "http://+:20001"
-                    }
-                  ],
-                  "resources": {
-                    "requests": {
-                      "cpu": 0.5,
-                      "memoryInGB": 1.0
-                    }
-                  }
-                }
-              ],
-              "replicaCount": 1,
-              "networkRefs": [
-                {
-                  "name": "[resourceId('Microsoft.ServiceFabricMesh/networks', 'MeshAppzNetwork')]"
-                }
-              ]
-            }
           }
         ],
         "description": "MeshAppz description."
