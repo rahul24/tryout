@@ -13,33 +13,33 @@
   "resources": [
     {
       "apiVersion": "2018-07-01-preview",
-      "name": "MeshAppz",
+      "name": "TryOut.Mesh",
       "type": "Microsoft.ServiceFabricMesh/applications",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "Microsoft.ServiceFabricMesh/networks/MeshAppzNetwork"
+        "Microsoft.ServiceFabricMesh/networks/TryOut.MeshNetwork"
       ],
       "properties": {
         "services": [
           {
-            "name": "Web1",
+            "name": "WebApp",
             "properties": {
-              "description": "Web1 description.",
+              "description": "WebApp description.",
               "osType": "Windows",
               "codePackages": [
                 {
-                  "name": "Web1",
-                  "image": "web1:dev",
+                  "name": "WebApp",
+                  "image": "webapp:dev",
                   "endpoints": [
                     {
-                      "name": "Web1Listener",
-                      "port": 20004
+                      "name": "WebAppListener",
+                      "port": 20002
                     }
                   ],
                   "environmentVariables": [
                     {
                       "name": "ASPNETCORE_URLS",
-                      "value": "http://+:20004"
+                      "value": "http://+:20002"
                     }
                   ],
                   "resources": {
@@ -53,32 +53,32 @@
               "replicaCount": 1,
               "networkRefs": [
                 {
-                  "name": "[resourceId('Microsoft.ServiceFabricMesh/networks', 'MeshAppzNetwork')]"
+                  "name": "[resourceId('Microsoft.ServiceFabricMesh/networks', 'TryOut.MeshNetwork')]"
                 }
               ]
             }
           }
         ],
-        "description": "MeshAppz description."
+        "description": "TryOut.Mesh description."
       }
     },
     {
       "apiVersion": "2018-07-01-preview",
-      "name": "MeshAppzNetwork",
+      "name": "TryOut.MeshNetwork",
       "type": "Microsoft.ServiceFabricMesh/networks",
       "location": "[parameters('location')]",
       "dependsOn": [],
       "properties": {
-        "description": "MeshAppzNetwork description.",
+        "description": "TryOut.MeshNetwork description.",
         "addressPrefix": "10.0.0.4/22",
         "ingressConfig": {
           "layer4": [
             {
-              "name": "Web1Ingress",
-              "publicPort": "20004",
-              "applicationName": "MeshAppz",
-              "serviceName": "Web1",
-              "endpointName": "Web1Listener"
+              "name": "WebAppIngress",
+              "publicPort": "20002",
+              "applicationName": "TryOut.Mesh",
+              "serviceName": "WebApp",
+              "endpointName": "WebAppListener"
             }
           ]
         }
