@@ -8,6 +8,10 @@
       "metadata": {
         "description": "Location of the resources."
       }
+    },
+    "registryPassword": {
+      "defaultValue": "",
+      "type": "String"
     }
   },
   "resources": [
@@ -22,24 +26,24 @@
       "properties": {
         "services": [
           {
-            "name": "WebApp",
+            "name": "Service1",
             "properties": {
-              "description": "WebApp description.",
+              "description": "Service1 description.",
               "osType": "Windows",
               "codePackages": [
                 {
-                  "name": "WebApp",
-                  "image": "webapp:dev",
+                  "name": "Service1",
+                  "image": "testazcontainer.azurecr.io/service1:20180723203330",
                   "endpoints": [
                     {
-                      "name": "WebAppListener",
-                      "port": 20002
+                      "name": "Service1Listener",
+                      "port": 20003
                     }
                   ],
                   "environmentVariables": [
                     {
                       "name": "ASPNETCORE_URLS",
-                      "value": "http://+:20002"
+                      "value": "http://+:20003"
                     }
                   ],
                   "resources": {
@@ -47,6 +51,11 @@
                       "cpu": 0.5,
                       "memoryInGB": 1.0
                     }
+                  },
+                  "imageRegistryCredential": {
+                    "server": "testazcontainer.azurecr.io",
+                    "username": "testazcontainer",
+                    "password": "[parameters('registryPassword')]"
                   }
                 }
               ],
@@ -75,10 +84,10 @@
           "layer4": [
             {
               "name": "WebAppIngress",
-              "publicPort": "20002",
+              "publicPort": "80",
               "applicationName": "TryOut.Mesh",
-              "serviceName": "WebApp",
-              "endpointName": "WebAppListener"
+              "serviceName": "Service1",
+              "endpointName": "Service1Listener"
             }
           ]
         }
